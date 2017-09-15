@@ -3,3 +3,5 @@ Short program that simulates a package delivery service.  The program allows the
 
 
 To successfully compile program, the compiler must be able to access each header file.  At compile time, customer.cpp,  package.cpp, overnightPackage.cpp, twoDayPackage.cpp, and driver.cpp must be compiled together.
+
+Typescript contains the code and a sample execution of the program.
