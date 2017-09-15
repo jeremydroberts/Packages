@@ -1,0 +1,1019 @@
+Script started on Mon 08 May 2017 05:55:00 PM EDT
+]0;jeremyroberts@storm:~/CISC2000/package[jeremyroberts@storm package]$ pwd
+/home/students/jeremyroberts/CISC2000/package
+]0;jeremyroberts@storm:~/CISC2000/package[jeremyroberts@storm package]$ cat pa[K[Kcut[Kstomer.h customer.cpp package.h package.cpp twoDayPackage.h twoDay [KPackage.cpp overnightPackage.c[Kh overnightPackage.cpp driver.cpp
+/*Jeremy Roberts
+ * Papadakis
+ * CISC2000 - Spring 2017
+ *
+ * This contains the definition of the Customer class
+ */
+
+#ifndef CUSTOMER_H
+#define CUSTOMER_H
+
+#include <iostream>
+#include <iomanip>
+#include <string>
+using namespace std;
+
+class Customer {
+
+public: 
+	Customer(const string & = " ", const string & = " ", const string & = " ", const string & = " ", const string & = " ", const string & = " ");
+
+	const Customer &operator=(const Customer &);
+
+        void input();
+	void print() const;
+
+        string getFirstName() const;
+        string getLastName() const;
+        string getAddress() const;
+        string getCity() const;
+        string getState() const;
+        string getZip() const;
+
+        void setFirstName(const string &);
+        void setLastName(const string &);
+        void setAddress(const string &);
+        void setCity(const string &);
+        void setState(const string &);
+        void setZip(const string &);
+        
+private:
+        string firstName;
+        string lastName;
+        string address;
+        string city;
+        string state;
+        string zip;
+        
+};     
+
+#endif
+/* Jeremy Roberts
+ * Papadakis
+ * CISC2000 - Spring 2017
+ *
+ * This implements the Customer class
+ */
+
+#include "customer.h"
+
+//default constructer
+Customer::Customer(const string &fname, const string &lname, const string &ad, const string &ct, const string &st, const string &z){
+
+	setFirstName(fname);
+	setLastName(lname);
+	setAddress(ad);
+	setCity(ct);
+	setState(st);
+	setZip(z);
+}
+
+//input method
+void Customer::input(){
+	string fname, lname, ad, ct, st, z;
+
+	cout << "First Name: ";
+	cin >> fname;
+	setFirstName(fname);
+
+	cout << "Last Name: ";
+	cin >> lname;
+	setLastName(lname);
+	cin.ignore(100, '\n');
+
+	cout << "Address: ";
+	getline(cin, ad);
+	setAddress(ad);
+	
+	cout << "City: ";
+	getline(cin, ct);
+	setCity(ct);
+
+	cout << "State: ";
+	cin >> st;
+	setState(st);
+
+	cout << "Zip Code: ";
+	cin >> z;
+	setZip(z);
+}
+
+//copy constructor
+const Customer& Customer::operator=(const Customer &c){
+	setFirstName(c.getFirstName());
+	setLastName(c.getLastName());
+	setAddress(c.getAddress());
+	setCity(c.getCity());
+	setState(c.getState());
+	setZip(c.getZip());
+};
+
+//display method
+void Customer::print() const{
+	cout << setprecision(2) << fixed;
+	cout << "Name: " << getFirstName() << " " << getLastName() << endl;
+	cout << "Address: " << getAddress() << endl;
+	cout << "City: " << getCity() << endl;
+	cout << "State: " << getState() << endl;
+	cout << "Zip Code: " << getZip() << endl << endl;
+}
+
+//mutator methods for data members of Customer
+void Customer::setFirstName(const string &fname){
+	firstName = fname;
+}
+
+void Customer::setLastName(const string &lname){
+	lastName = lname;
+}
+
+void Customer::setAddress(const string &ad){
+	address = ad;
+}
+
+void Customer::setCity(const string &ct){
+	city = ct;
+}
+
+void Customer::setState(const string &st){
+	state = st;
+}
+
+void Customer::setZip(const string &z){
+	zip = z;
+}
+
+//accessor methods for data members of Customer
+string Customer::getFirstName() const{
+	return(firstName);
+}
+
+string Customer::getLastName() const{
+	return(lastName);
+}
+
+string Customer::getAddress() const{
+	return(address);
+}
+
+string Customer::getCity() const{
+	return(city);
+}
+
+string Customer::getState() const{
+	return(state);
+}
+
+string Customer::getZip() const{
+	return(zip);
+}
+
+/*
+main(){
+	Customer c;
+	c.input();
+	c.print();
+	Customer d;
+	d = c;
+	d.print();
+}*/
+/* Jeremy Roberts
+ * Papadakis
+ * CISC2000 - Spring 2017
+ *
+ * This contains the definition of the base Package class
+ */
+
+#ifndef PACKAGE_H
+#define PACKAGE_H
+
+#include <iostream>
+#include "customer.h"
+using namespace std;
+
+class Package {
+
+public:
+	Package();
+	Package(const Customer &, const Customer &, double = 0.0, double = 0.0);
+	
+	double getWeight() const;
+	double getUnitCost() const;
+	double getShippingCost() const;
+	
+	Customer getSender() const;
+	Customer getRecipient() const;
+
+
+	void inputSender();
+	void inputRecipient();
+
+	bool setWeight(const double &);
+	bool setUnitCost(const double &);
+	double calculateCost();	
+
+	void print() const;	
+
+protected:
+	Customer sender;
+	Customer recipient;
+//private:
+	double weight;
+	double unitCost;
+	double shippingCost;
+};
+
+#endif
+/* Jeremy Roberts
+ * Papadakis
+ * CISC2000 - Spring 2017
+ * 
+ * This implements base Package Class
+ * NOTE: must be compiled with customer.cpp
+ *
+ */
+
+#include "package.h"
+
+//default constructor
+Package::Package(){
+	
+	setWeight(0.0);
+	setUnitCost(0.0);
+	calculateCost();
+}
+
+//constructor with values for weight and unit cost
+Package::Package(const Customer &s, const Customer &r, double w, double cost) : Package() {
+	
+	setWeight(w);
+	setUnitCost(cost);
+	calculateCost();
+
+	sender.setFirstName(s.getFirstName());
+	sender.setLastName(s.getLastName());
+	sender.setAddress(s.getAddress());
+	sender.setCity(s.getCity());
+	sender.setState(s.getState());
+	sender.setZip(s.getZip());
+
+	recipient.setFirstName(r.getFirstName());
+	recipient.setLastName(r.getLastName());
+	recipient.setAddress(r.getAddress());
+	recipient.setCity(r.getCity());
+	recipient.setState(r.getState());
+	recipient.setZip(r.getZip());
+}
+
+//accessor methods
+double Package::getWeight() const {
+	return(weight);
+}
+
+double Package::getUnitCost() const {
+	return(unitCost);
+}
+
+double Package::getShippingCost() const {
+	return(shippingCost);
+}
+
+Customer Package::getSender() const{
+	return(sender);
+}
+
+Customer Package::getRecipient() const{
+	return(recipient);
+}
+
+//runs input methods for each Customer object
+void Package::inputSender(){
+	sender.input();
+}
+
+void Package::inputRecipient(){
+	recipient.input();
+}
+
+//mutator methods
+//valids input, updates variable value
+//then runs calculateCost to update shippingCost
+bool Package::setWeight(const double &w) {
+	
+	bool valid = false;
+
+	if(w >= 0.0){
+		weight = w;
+		calculateCost();
+		valid = true;
+	}
+	
+	return(valid);
+}
+
+//validates information, updates variable value
+//then runs calculateCost to update shipppingCost
+bool Package::setUnitCost(const double &u) {
+
+	bool valid = false;
+
+	if(u >= 0.0){
+		unitCost = u;
+		calculateCost();
+		valid = true;
+	}
+
+	return(valid);
+}
+
+//method to calculate shipping cost using weight and unit cost
+double Package::calculateCost() {
+	
+	shippingCost = getWeight()*getUnitCost();
+	return(shippingCost);
+}
+
+//uses Customer print method for each object
+//other variables are printed in derived class method
+void Package::print() const{
+	cout << "\nSender Information:\n";
+	sender.print();
+	cout << "Recipient Information:\n";
+	recipient.print();
+}
+
+/*
+main(){
+
+	Customer c1("Jeremy", "Roberts", "7664 S. Joplin", "Tulsa", "OK", "74136");
+	Customer c2("David", "S. Pumpkins", "69 Halloweentown Road", "New York", "NY", "10458");
+
+	Package p(c1, c2, 5.3, 4.234);
+
+	p.print();
+	cout << "Weight: " << p.getWeight() << "\nUnit Cost: " << p.getUnitCost()
+		<< "\nShipping Cost: " << p.getShippingCost() << endl;
+
+}*/
+/* Jeremy Roberts
+ * Papadakis
+ * CISC2000 - Spring 2017
+ *
+ * This contains the definition of TwoDayPackage,
+ * a derived class of Package
+ */
+
+#ifndef TWODAYPACKAGE_H
+#define TWODAYPACKAGE_H
+
+#include "package.h"
+
+class TwoDayPackage : public Package {
+
+public:
+	TwoDayPackage();
+	TwoDayPackage(const Customer &, const Customer &, double = 0.0, double = 0.0);
+	~TwoDayPackage();
+	
+	TwoDayPackage &operator=(const TwoDayPackage &);
+	
+	double getTwoDayCost() const;
+	double getTwoDayFee() const;
+	static int getNumTwoDay();
+	static double getTwoDayRevenue();
+
+	void input();
+	bool setWeight(double);
+	bool  setUnitCost(double);
+	//void setSender(Customer);
+	//void setRecipient(Customer);
+
+	void print() const;
+	double calculateCost();
+	
+private:
+	const double twoDayFee = 8.00;
+	double twoDayCost;
+	static int numTwoDay;
+	static double twoDayRevenue;
+};
+#endif
+/* Jeremy Roberts
+ * Papadakis
+ * CISC2000 - Spring 2017
+ * This contains the implementation of the TwoDayPackage class
+ * derived from base Package class
+ * NOTE: Must be compiled with package.cpp and customer.cpp
+ */
+
+#include "twoDayPackage.h"
+
+//initialize static counter variables
+int TwoDayPackage::numTwoDay = 0;
+double TwoDayPackage::twoDayRevenue = 0;
+
+//default constructor
+TwoDayPackage::TwoDayPackage() : Package() {
+	calculateCost();
+	numTwoDay++;
+}
+
+//custom constructor
+TwoDayPackage::TwoDayPackage(const Customer &s, const Customer &r, double w, double u) : Package(s, r, w, u) {
+	calculateCost();
+	numTwoDay++;
+}
+
+//copy constructor
+TwoDayPackage& TwoDayPackage::operator=(const TwoDayPackage &t){
+	setUnitCost(t.getUnitCost());
+	setWeight(t.getWeight());
+	Package::sender = t.Package::getSender();
+	Package::recipient = t.Package::getRecipient();
+}
+
+//destructor, decrements numTwoDay counter and total revenue counter
+TwoDayPackage::~TwoDayPackage(){
+	numTwoDay--;
+	twoDayRevenue - getTwoDayCost();
+}
+
+
+//overwrites base class function, adding two day shipping flat fee
+double TwoDayPackage::calculateCost(){
+	twoDayRevenue-=twoDayCost; //subtracts previous value from total
+	twoDayCost = (weight*unitCost)+getTwoDayFee(); //recalculates, adding flat fee
+	twoDayRevenue+=twoDayCost; //adds new value to total
+	return(twoDayCost); //returns twoDayCost
+}
+
+//accessor methods
+double TwoDayPackage::getTwoDayCost() const{
+	return(twoDayCost);
+}
+
+double TwoDayPackage::getTwoDayFee() const{
+	return(twoDayFee);
+}
+
+int TwoDayPackage::getNumTwoDay(){
+	return(numTwoDay);
+}
+
+double TwoDayPackage::getTwoDayRevenue(){
+	return(twoDayRevenue);
+}
+
+//allows for input of customer and package
+void TwoDayPackage::input(){
+	
+	cout << "Input Sender Information:\n";
+	Package::inputSender();
+
+	cout << "Input Recipient Information:\n";
+	Package::inputRecipient();
+
+	double weight;
+	cout << "Package Weight (oz): ";
+	cin >> weight;
+	setWeight(weight);
+
+	double cost;
+	cout << "Cost per Ounce ($): ";
+	cin >> cost;
+	setUnitCost(cost);
+}
+
+//mutator methods
+//validates input, updates variable value,
+//then runs calculateCost() to update twoDayCost value
+bool TwoDayPackage::setWeight(double w){
+	bool valid = false;
+        if(w >= 0.0){
+                weight = w;
+                calculateCost();
+                valid = true;
+        }
+        return(valid);	
+}
+
+//same as above
+bool TwoDayPackage::setUnitCost(double u){
+	bool valid = false;
+	if(u >= 0.0){
+                unitCost = u;
+                calculateCost();
+                valid = true;
+        }
+        return(valid);
+}
+
+//display method
+void TwoDayPackage::print() const {
+
+	cout << "\nTwo-Day Shipping Summary:\n";
+	Package::print();
+	cout << "Package Weight: " << Package::getWeight() << "oz."
+		<< "\nShipping Cost per Ounce: $" << Package::getUnitCost()
+		<< "\nTwo Day Shipping Fee: $" << getTwoDayFee()
+		<< "\nTotal Shipping Cost: $" << getTwoDayCost() << endl;
+
+}
+
+/*
+main(){
+
+ 	Customer c1("Jeremy", "Roberts", "7664 S. Joplin", "Tulsa", "OK", "74136");
+        Customer c2("David", "S. Pumpkins", "69 Halloweentown Road", "New York", "NY", "10458");
+
+        TwoDayPackage p(c1, c2, 5, 5);
+        p.print();
+        cout << p.getNumTwoDay() << endl;
+        cout << p.getTwoDayRevenue() << endl;
+
+        TwoDayPackage p2(c2, c1, 10, 10);
+        p2.print();
+        cout << p2.getNumTwoDay() << endl;
+        cout << p2.getTwoDayRevenue() << endl;
+
+        p.setUnitCost(1);
+        p.print();
+        cout << p.getTwoDayRevenue() << endl;
+
+	p = p2;
+	p.print();	
+}*/
+/* Jeremy Roberts
+ * Papadakis
+ * CISC2000 - Spring 2017
+ *
+ * This contains the definition for OvernightPackage class,
+ * derived from base Package class
+ */
+
+#ifndef OVERNIGHTPACKAGE_H
+#define OVERNIGHTPACKAGE_H
+
+#include "package.h"
+
+class OvernightPackage : public Package {
+
+public:
+	OvernightPackage();
+	OvernightPackage(const Customer &, const Customer &, double = 0.0, double = 0.0);
+	~OvernightPackage();
+
+	double getOvernightCost() const;
+	double getOvernightFee() const;
+	static int getNumOvernight();
+	static double getOvernightRevenue();
+
+	void input();
+	bool setWeight(double);
+	bool setUnitCost(double);
+
+	void print() const;
+	double calculateCost();
+
+private:
+	const double overnightFee = 15.00;
+	double overnightCost;
+	static int numOvernight;
+	static double overnightRevenue;
+};
+#endif
+/* Jeremy Roberts
+ * Papadakis
+ * CISC2000 - Spring 2017
+ *
+ * This contains the implementation of the OvernightPackage class,
+ * derived from base Package class
+ * 
+ * NOTE: Must be compiled with customer.cpp and package.cpp
+ */
+
+#include "overnightPackage.h"
+
+//initialize static counter variables
+int OvernightPackage::numOvernight = 0;
+double OvernightPackage::overnightRevenue = 0;
+
+//default constructor
+OvernightPackage::OvernightPackage():Package() {
+	calculateCost();
+	numOvernight++;
+}
+
+//custom constructor
+OvernightPackage::OvernightPackage(const Customer &s, const Customer &r, double w, double u):Package(s,r,w,u){
+	calculateCost();
+	numOvernight++;
+}
+
+//destructor, decrements counter and total revenue
+OvernightPackage::~OvernightPackage(){
+	numOvernight--;
+	overnightRevenue - getOvernightCost();
+}
+
+//allows input of customer and package details
+void OvernightPackage::input(){
+
+ 	cout << "Input Sender Information:\n";
+        Package::inputSender();
+
+        cout << "Input Recipient Information:\n";
+        Package::inputRecipient();
+
+        double weight;
+        cout << "Package Weight (oz): ";
+        cin >> weight;
+        setWeight(weight);
+
+        double cost;
+        cout << "Cost per Ounce ($): ";
+        cin >> cost;
+        setUnitCost(cost);
+}
+
+//overwrites base class function, adds overnight flat fee
+double OvernightPackage::calculateCost(){
+	overnightRevenue -= overnightCost; //subtracts old value from total revenue
+	overnightCost = (weight*unitCost)+getOvernightFee(); //recalculates, adding flat fee
+	overnightRevenue+=overnightCost; //adds new value to total revenue
+}
+
+//accessor methods
+double OvernightPackage::getOvernightCost() const{
+	return(overnightCost);
+}
+
+double OvernightPackage::getOvernightFee() const{
+	return(overnightFee);
+}
+
+int OvernightPackage::getNumOvernight(){
+	return(numOvernight);
+}
+
+double OvernightPackage::getOvernightRevenue(){
+	return(overnightRevenue);
+}
+
+//mutator methods
+//validates input, updates variable value,
+//runs calculateCost to update overnightCost
+bool OvernightPackage::setWeight(double w){
+	bool valid = false;
+        if(w >= 0.0){
+                weight = w;
+                calculateCost();
+                valid = true;
+        }
+        return(valid);
+}
+
+//same as above
+bool OvernightPackage::setUnitCost(double u){
+	bool valid = false;
+        if(u >= 0.0){
+                unitCost = u;
+                calculateCost();
+                valid = true;
+        }
+        return(valid);
+}
+
+//display method
+void OvernightPackage::print() const{
+	cout << "\nOvernight Shipping Summary:\n";
+        Package::print();
+	cout << "Package Weight: " << Package::getWeight() << "oz."
+                << "\nShipping Cost per Ounce: $" << Package::getUnitCost()
+                << "\nOvernight Shipping Fee: $" << getOvernightFee()
+                << "\nTotal Shipping Cost: $" << getOvernightCost() << endl;
+}
+
+/*
+main(){
+        Customer c1("Jeremy", "Roberts", "7664 S. Joplin", "Tulsa", "OK", "74136");
+        Customer c2("David", "S. Pumpkins", "69 Halloweentown Road", "New York", "NY", "10458");
+
+        OvernightPackage p(c1, c2, 5, 5);
+	p.print();
+	cout << p.getNumOvernight() << endl;
+	cout << p.getOvernightRevenue() << endl;
+
+	OvernightPackage p2(c1, c2, 10, 10);
+	p2.print();
+	cout << p2.getNumOvernight() << endl;
+	cout << p2.getOvernightRevenue() << endl;
+
+	p.setUnitCost(10);
+	p.print();
+	cout << p.getOvernightRevenue() << endl;
+}*/
+/* Jeremy Roberts
+ * Papadakis
+ * CISC2000 - Spring 2017
+ *
+ * This driver program tests the TwoDayPackage and OvernightPackage classes
+ * that are derived from the Package base class
+ * and tests the calculateCost() function for each of them
+ *
+ * NOTE: This file must be compiled with twoDayPackage.cpp, overnightPackage.cpp,
+ * package.cpp, and customer.cpp
+ */
+
+#include "twoDayPackage.h"
+#include "overnightPackage.h"
+
+main(){
+	//sets output precision for double type variables at 2 decimal points
+	cout << setprecision(2) << fixed;
+	
+	//variables used in main()
+	bool moreCustomers = true;
+	char cont;
+	char shipType;
+	bool validType = false;
+	
+	//limits total amount of each package
+	const int MAX_CUST = 100;
+
+	//create array of pointers to TwoDayPackage objects
+	TwoDayPackage *TwoDayPackages[MAX_CUST];
+
+	//create array of pointers to OvernightPackage objects
+	OvernightPackage *OvernightPackages[MAX_CUST];
+	
+	//counters for loop
+	int m = 0;
+	int n = 0;
+	
+	do{
+		do{
+			cout << "What type of shipping do you want to use: [T]wo Day, or [O]vernight? ";
+			cin >> shipType;
+
+			//checks that user inputs a correct category of package
+			//allows input of an object, then moves to next space in array
+			if(shipType == 'T' || shipType == 't'){
+				if(m > 99){
+					cout << "You have reached maximum amount of Two-Day Packages.\n";
+					validType = true;
+				}
+				else{
+					TwoDayPackages[m] = new TwoDayPackage;
+					TwoDayPackages[m]->input();
+					m++;
+					validType = true;
+				}
+			}
+			
+			//same as above
+			else if(shipType == 'O' || shipType == 'o'){
+				if(n>99){
+					cout << "You have reached the maximum amount of Overnight Packages.\n";
+					validType = true;
+				}
+
+				else{
+					OvernightPackages[n] = new OvernightPackage;
+					OvernightPackages[n]->input();
+					n++;
+					validType = true;
+				}
+			}
+				
+			//runs loop again until valid input is entered
+			else{
+				cout << "Invalid Input...\n";
+				validType = false;
+			}
+		
+		} while(!validType); //loop terminates when a valid input is entered
+		
+		cout << "Would You Like To Input Another Package: [Y]es or [N]o? ";
+                cin >> cont;
+                if(cont == 'N' || cont == 'n')
+                        moreCustomers = false;
+
+	}while(moreCustomers); //loop terminates when user does not want to input more packages
+
+	//outputs summary of packages
+	cout << "\nToday's Summary:\n";
+
+	//outputs Two Day Packages
+        if (TwoDayPackage::getNumTwoDay() > 0){
+                cout << "\nTwo Day Packages:\n";
+                //for loop to display twoDayPackages
+                for(int i = 0; i < TwoDayPackage::getNumTwoDay(); i++){
+                        cout << "\nPackage " << i+1 << ":\n";
+                        TwoDayPackages[i]->print();
+                }
+        }
+ 
+	//outputs Overnight Packages
+        if(OvernightPackage::getNumOvernight > 0){
+                cout << "\nOvernight Packages:\n";
+                //for loop to display overnightPackages
+                for(int i=0; i<OvernightPackage::getNumOvernight(); i++){
+                        cout << "\nPackage " << i+1 << ":\n";
+                        OvernightPackages[i]->print();
+                }
+        }
+
+	//displays static counter variables for classes
+        cout << "\nTotal Number of Two-Day Packages: " << TwoDayPackage::getNumTwoDay()
+                << "\nTotal Revenue of Two-Day Packages: $" << TwoDayPackage::getTwoDayRevenue() << endl;
+        cout << "\nTotal Number of Overnight Packages: " << OvernightPackage::getNumOvernight()
+                << "\nTotal Revenue of Overnight Packages: $" << OvernightPackage::getOvernightRevenue() << endl << endl;
+}
+]0;jeremyroberts@storm:~/CISC2000/package[jeremyroberts@storm package]$ g++ cuts[K[Kstomer.c[Kh cus[K[K[K[Kc[K[Kcpp pak[Kckage.cpp twoDayPackage.cpp overngii[K[K[KightPackage.cpp driver.cpp
+]0;jeremyroberts@storm:~/CISC2000/package[jeremyroberts@storm package]$ ./a.out
+What type of shipping do you want to use: [T]wo Day, or [O]vernight? T
+Input Sender Information:
+First Name: Steve
+Last Name: Austin
+Address: 123 Maple Ln.
+City: New Haven
+State: CT
+Zip Code: 14035
+Input Recipient Information:
+First Name: Randy
+Last Name: OP rton
+Address: 345 Sheridan Rd.
+City: Golden
+State: CO
+Zip Code: 30299
+Package Weight (oz): 4.55
+Cost per Ounce ($): 3.56
+Would You Like To Input Another Package: [Y]es or [N]o? Y
+What type of shipping do you want to use: [T]wo Day, or [O]vernight? O
+Input Sender Information:
+First Name: Al
+Last Name: Roker
+Address: 322 &th A     7th Ave.
+City: New York
+State: NY
+Zip Code: 10590
+Input Recipient Information:
+First Name: Dai vid  
+Last Name: Pumpkins
+Address: 69 Halow  loween Rd.
+City: Portland
+State: ME
+Zip Code: 45998
+Package Weight (oz): 15.99
+Cost per Ounce ($): 2.34
+Would You Like To Input Another Package: [Y]es or [N]o? Y
+What type of shipping do you want to use: [T]wo Day, or [O]vernight? T
+Input Sender Information:
+First Name: Jeremy
+Last Name: Roberts
+Address: 7664 S. j Joplin Ave.
+City: Tulsa
+State: OK
+Zip Code: 74136
+Input Recipient Information:
+First Name: The
+Last Name: Undera taker
+Address: 335 Mountainview Rd.
+City: Sacramento  
+State: CA
+Zip Code: 34456
+Package Weight (oz): 122  2.80
+Cost per Ounce ($): 1.22
+Would You Like To Input Another Package: [Y]es or [N]o? Y
+What type of shipping do you want to use: [T]wo Day, or [O]vernight? O
+Input Sender Information:
+First Name: The
+Last Name: Rock
+Address: 449 Palm Ln.
+City: Miami
+State: FL
+Zip Code: 10339
+Input Recipient Information:
+First Name: Betty
+Last Name: White
+Address: 8809  9 09 F Circle Cr.
+City: Manhattan
+State: KS
+Zip Code: 78893
+Package Weight (oz): 3.00 2
+Cost per Ounce ($): 4.89
+Would You Like To Input Another Package: [Y]es or [N]o? N
+
+Today's Summary:
+
+Two Day Packages:
+
+Package 1:
+
+Two-Day Shipping Summary:
+
+Sender Information:
+Name: Steve Austin
+Address: 123 Maple Ln.
+City: New Haven
+State: CT
+Zip Code: 14035
+
+Recipient Information:
+Name: Randy Orton
+Address: 345 Sheridan Rd.
+City: Golden
+State: CO
+Zip Code: 30299
+
+Package Weight: 4.55oz.
+Shipping Cost per Ounce: $3.56
+Two Day Shipping Fee: $8.00
+Total Shipping Cost: $24.20
+
+Package 2:
+
+Two-Day Shipping Summary:
+
+Sender Information:
+Name: Jeremy Roberts
+Address: 7664 S. Joplin Ave.
+City: Tulsa
+State: OK
+Zip Code: 74136
+
+Recipient Information:
+Name: The Undertaker
+Address: 335 Mountainview Rd.
+City: Sacramento
+State: CA
+Zip Code: 34456
+
+Package Weight: 12.80oz.
+Shipping Cost per Ounce: $1.22
+Two Day Shipping Fee: $8.00
+Total Shipping Cost: $23.62
+
+Overnight Packages:
+
+Package 1:
+
+Overnight Shipping Summary:
+
+Sender Information:
+Name: Al Roker
+Address: 322 7th Ave.
+City: New York
+State: NY
+Zip Code: 10590
+
+Recipient Information:
+Name: David Pumpkins
+Address: 69 Halloween Rd.
+City: Portland
+State: ME
+Zip Code: 45998
+
+Package Weight: 15.99oz.
+Shipping Cost per Ounce: $2.34
+Overnight Shipping Fee: $15.00
+Total Shipping Cost: $52.42
+
+Package 2:
+
+Overnight Shipping Summary:
+
+Sender Information:
+Name: The Rock
+Address: 449 Palm Ln.
+City: Miami
+State: FL
+Zip Code: 10339
+
+Recipient Information:
+Name: Betty White
+Address: 8809 Circle Cr.
+City: Manhattan
+State: KS
+Zip Code: 78893
+
+Package Weight: 3.02oz.
+Shipping Cost per Ounce: $4.89
+Overnight Shipping Fee: $15.00
+Total Shipping Cost: $29.77
+
+Total Number of Two-Day Packages: 2
+Total Revenue of Two-Day Packages: $47.81
+
+Total Number of Overnight Packages: 2
+Total Revenue of Overnight Packages: $82.18
+
+]0;jeremyroberts@storm:~/CISC2000/package[jeremyroberts@storm package]$ exit
+exit
+
+Script done on Mon 08 May 2017 06:00:18 PM EDT
